@@ -5,7 +5,7 @@ description: This is the overview page of Use Case Playbooks.
 
 # Overview
 
-Welcome to the UCP user guide. 
+Welcome to the UCP user guide.
 
 MORE...
 
