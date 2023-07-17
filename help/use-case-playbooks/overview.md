@@ -1,6 +1,6 @@
 ---
 title: Use Case Playbooks Overview
-description: This is the overview page of UCP.
+description: This is the overview page of Use Case Playbooks.
 ---
 
 # Overview
