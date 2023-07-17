@@ -6,10 +6,8 @@ user-guide-description: This is a description for the user guide that will be di
 
 # Marketer Experience {#using}
 
-## Amplify {#amplify}
-
-+ [Overview](amplify/overview.md)
-
-## Use Case Playbooks {#use-case-playbooks}
-
-+ [Overview](use-case-playbooks/overview.md)
++ [Marketer Experience Home](home.md)
++ Amplify {#amplify}
+  + [Overview](amplify/overview.md)
++ Use Case Playbooks {#use-case-playbooks}
+  + [Overview](use-case-playbooks/overview.md)
