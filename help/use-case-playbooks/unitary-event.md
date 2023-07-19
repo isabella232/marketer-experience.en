@@ -30,11 +30,11 @@ Below is `Playbook Instance Objects Page`
 
 ## Fetch IMS Token
 
-1. Please follow [Authenticate and access Experience Platform APIs](https://experienceleague.adobe.com/docs/experience-platform/landing/platform-apis/api-authentication.html) documentation to generate the Access Token.
-2. Store the Access Token value in Environment variables named `ACCESS_TOKEN`.
 >!Note
 >
 >All Environment variables are case sensitive so please always use the exact variable name.
+1. Please follow [Authenticate and access Experience Platform APIs](https://experienceleague.adobe.com/docs/experience-platform/landing/platform-apis/api-authentication.html) documentation to generate the Access Token.
+2. Store the Access Token value in Environment variables named `ACCESS_TOKEN`.
 3. Store other authentication related values like `API_KEY`, `IMS_ORG` and `SANDBOX_NAME` in Environment variables
 >!Important
 >
