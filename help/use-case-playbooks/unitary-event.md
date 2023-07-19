@@ -58,7 +58,7 @@ There are 2 ways to publish the journey, you may opt any of them:
 1. Store the `customer_schema_id` in Environment variables, `customer_schema_id` can be fetched from `Customer Profile` schema on `Playbook Instance Objects Page`.
 2. Use **[!DNL Create Dataset for Customer]** 
 3. Edit emailId, mobile number for sms in customer data
-4. TODO ingest customer
+4. TODO ingest customer streaming
 
 ## Ingest Event
 
@@ -66,7 +66,7 @@ There are 2 ways to publish the journey, you may opt any of them:
 2. Use **[!DNL Create Dataset for Event]** 
 3. use the same emailId which we used while ingesting the customer, in event payload
 4. Change the event timestamp back to 30 mins so that we immdiately becomes abandoned cart segment candidate
-5. TODO ingest event
+5. TODO ingest event streaming
 
 ## Final Validation
 
