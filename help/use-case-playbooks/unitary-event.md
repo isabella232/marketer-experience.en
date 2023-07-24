@@ -114,7 +114,7 @@ change preferred channel to `sms` or `push` and make respective channel value to
 }
 ```
 
-8. Trigger **[!DNL `Customer Ingestion > Customer Streaming Ingestion`]** to ingest the customer profile
+Finally Trigger **[!DNL `Customer Ingestion > Customer Streaming Ingestion`]** to ingest the customer profile
 
 ## Ingest Event
 
