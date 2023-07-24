@@ -55,6 +55,10 @@ There are 2 ways to publish the journey, you may opt any of them:
 
 ## Ingest the Customer Profile
 
+>[!TIP]
+>
+>You can reuse the same email address by appending `+<variable>` into your email e.g. `usertest@email.com` can be resued as `usertest+v1@email.com` or `usertest+24jul@email.com`. This would be helpful to have a fresh profile each time, but still using the same email id.
+
 1. First time user need to create the **[!DNL customer dataset]** and **[!DNL HTTP Streaming Inlet Connection]**
 2. If you already have created the **[!DNL customer dataset]** and **[!DNL HTTP Streaming Inlet Connection]**, please skip to the step `5`.
 3. Trigger **[!DNL `Customer Ingestion > Create Customer InletId > Create Dataset`]** to create **[!DNL customer dataset]**, this will store a `customer_dataset_id` in postman environment variables
@@ -72,9 +76,6 @@ There are 2 ways to publish the journey, you may opt any of them:
     3. `customer_firstname` would be the first name of user
     4. `customer_lastname` would be the last name of user
     5. `customer_email_id` would be the email address of user, this is crucial to use distinct email id so that a fresh profile can be ingested.
->[!TIP]
->
->You can reuse the same email address by appending `+<variable>` into your email e.g. `usertest@email.com` can be resued as `usertest+v1@email.com` or `usertest+24jul@email.com`. This would be helpful to have a fresh profile each time, but still using the same email id.
 7. Update the Postman request **[!DNL `Customer Ingestion > Customer Streaming Ingestion`]** to change the preferred channel of customer by default [!DNL `email`] is configured in request.
 
 ```js
