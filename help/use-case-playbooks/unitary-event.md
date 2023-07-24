@@ -142,3 +142,8 @@ You must receive a message on your selected preferred channel used in **[!DNL In
 Alternatively you can check `Journey Report`, to check it click on `Journey Object` on `Bill of Materials page` this will redirect you to `Journey Details page`.
 For any published Journey user must get a **[!UICONTROL View report]** button
 ![Journey Report Page](../assets/journey-report-page.png)
+
+
+## Clean up
+
+Please do not have the multiple instances of `Journey` running simultaneously, kindly stop the Journey if it is only for validation.
