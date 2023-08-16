@@ -128,9 +128,9 @@ Finally Trigger **[!DNL `Customer Profile Ingestion > Customer Profile Streaming
     5. Trigger **[!DNL `CREATE Dataflow`]** to [!DNL create dataflow]
     6. Trigger **[!DNL `GET Base Connection`]**- this will automatically store `AEPDemoSchema_inlet_id` in the postman environment variables
 5. At this step you must have `AEPDemoSchema_dataset_id` and `AEPDemoSchema_inlet_id` in postman environment variables, if not, please refer step `3` or `4` respectively
-6. To ingest event, user need to change the time variable `timestamp` in request body of **[!DNL `Schemas Data Ingestion > AEP Demo Schema Ingestion > AEP Demo Schema Streaming Ingestion]** in postman.
+6. To ingest event, user need to change the time variable `timestamp` in request body of **[!DNL Schemas Data Ingestion > AEP Demo Schema Ingestion > AEP Demo Schema Streaming Ingestion]** in postman.
     1. `timestamp` would the time of event occurance, use the currrent timestamp e.g. `2023-07-21T16:37:52+05:30` adjust the time zone as per your need.
-7. Trigger **[!DNL `Schemas Data Ingestion > AEP Demo Schema Ingestion > AEP Demo Schema Streaming Ingestion]** to ingest the event, so that journey can be triggered
+7. Trigger **[!DNL Schemas Data Ingestion > AEP Demo Schema Ingestion > AEP Demo Schema Streaming Ingestion]** to ingest the event, so that journey can be triggered
 
 ## Final Validation
 
