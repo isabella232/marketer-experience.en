@@ -5,7 +5,7 @@ product: experience cloud
 type: Documentation
 mini-toc-levels: 2
 git-repo: https://github.com/AdobeDocs/marketer-experience.en
-index: no
+hide: yes
 ---
 
 # Metadata for internal use
