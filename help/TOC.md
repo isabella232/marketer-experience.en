@@ -1,7 +1,7 @@
 ---
 user-guide-title: Marketer Experience
 breadcrumb-title: Marketer Experience
-user-guide-description: This is a description for the user guide that will be displayed on the landing page.
+user-guide-description: Marketer Experience user guide.
 ---
 
 # Marketer Experience {#using}
