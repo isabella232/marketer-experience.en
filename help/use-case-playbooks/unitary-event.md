@@ -3,7 +3,7 @@ title: Unitary event
 description: This is an intruction page for simulating the `Unitary event` type of Journey validation.
 ---
 
-# Steps to follow
+# Steps to follow {#steps-to-follow}
 
 >[!CONTEXTUALHELP]
 >id="marketerExp_sampleData_unitaryGuide"
