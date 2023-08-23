@@ -6,7 +6,7 @@ description: This is an intruction page for simulating the `Unitary event` type 
 # Steps to follow {#steps-to-follow}
 
 >[!CONTEXTUALHELP]
->id="marketerExp_sampleData_unitaryGuide"
+>id="marketerexp_sampledata_unitaryevent"
 >title="How to use?"
 >abstract="Please follow the link for more details"
 
