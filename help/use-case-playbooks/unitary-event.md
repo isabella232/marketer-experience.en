@@ -5,6 +5,11 @@ description: This is an intruction page for simulating the '[!UICONTROL Unitary 
 
 # Unitary event
 
+>[!CONTEXTUALHELP]
+>id="marketerexp_sampledata_unitaryevent"
+>title="How to use?"
+>abstract="Please follow the link for more details"
+
 >[!IMPORTANT]
 >
 >These instructions might change across **[!UICONTROL Playbook]** so please always refer the Sample data section of respective **[!UICONTROL Playbook]**.
