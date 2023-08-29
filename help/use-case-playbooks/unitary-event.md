@@ -5,6 +5,8 @@ description: This is an intruction page for simulating the '[!UICONTROL Unitary 
 
 # Unitary event
 
+## Steps to follow {#steps-to-follow}
+
 >[!CONTEXTUALHELP]
 >id="marketerexp_sampledata_unitaryevent"
 >title="How to use?"
