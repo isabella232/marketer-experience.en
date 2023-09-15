@@ -57,6 +57,7 @@ There are 2 ways to publish the journey; you may choose any of them:
 1. **Using cURL**
 
     1. Publish the journey. The response will contain job id needed in next step to fetch journey publish status.
+
         ``` bash
         curl --location --request POST 'https://journey-private.adobe.io/authoring/jobs/journeyVersions/$JOURNEY_ID/deploy' \
         --header "Accept: */*" \
@@ -66,8 +67,10 @@ There are 2 ways to publish the journey; you may choose any of them:
         --header "x-gw-ims-org-id: $ORG_ID" \
         --header "x-sandbox-name: $SANDBOX_NAME"
         ```
+
     <!-- TODO: How to get and set JOB_ID? -->
     1. Journey publish might take some time, so in order to check the status execute below cURL, until the `response.status` is `SUCCESS`, make sure to wait 10-15 seconds if journey publish takes time.
+
         ```bash
         curl --location 'https://journey-private.adobe.io/authoring/jobs/$JOB_ID' \
         --header 'Authorization: Bearer $ACCESS_TOKEN' \
@@ -92,6 +95,7 @@ There are 2 ways to publish the journey; you may choose any of them:
 1. First-time user needs to create the **[!DNL customer dataset]** and **[!DNL HTTP Streaming Inlet Connection]**.
 1. If you already have created the **[!DNL customer dataset]** and **[!DNL HTTP Streaming Inlet Connection]**, please skip to the step `5`.
 1. Create a customer profile dataset by executing the below cURL.
+
     ```bash
     curl --location 'https://platform.adobe.io/data/foundation/catalog/dataSet' \
     --header "Authorization: Bearer $ACCESS_TOKEN" \
@@ -120,11 +124,13 @@ There are 2 ways to publish the journey; you may choose any of them:
         }
     }'
     ```
+
     The response will be of the format `"@/dataSets/<dataset_id>"`. 
     Set the variable in the terminal window as `PROFILE_DATASET_ID=<dataset_id>` using the `dataset_id` from the response. This will be used in later cURLs.
 
 1. Create **[!DNL HTTP Streaming Inlet Connection]** with help of following steps.
     1. Create a base connection.
+
         ```bash
         curl --location 'https://platform.adobe.io/data/foundation/flowservice/connections?Cache-Control=no-cache' \
         --header "Authorization: Bearer $ACCESS_TOKEN" \
@@ -147,8 +153,10 @@ There are 2 ways to publish the journey; you may choose any of them:
             }
         }'
         ```
+
         <!-- TODO: Provide instructions to set base connection id to a variable -->
     1. Create source connection. Use the id from the result of step 1 to get base connection id.
+
         ```bash
         curl --location 'https://platform.adobe.io/data/foundation/flowservice/sourceConnections' \
         --header "Authorization: Bearer $ACCESS_TOKEN" \
@@ -166,7 +174,9 @@ There are 2 ways to publish the journey; you may choose any of them:
             }
         }'
         ```
+
     1. Create target connection.
+
         ```bash
         curl --location 'https://platform.adobe.io/data/foundation/flowservice/targetConnections' \
         --header "Authorization: Bearer $ACCESS_TOKEN" \
@@ -194,8 +204,10 @@ There are 2 ways to publish the journey; you may choose any of them:
             }
         }
         ```
+
         <!-- TODO : Might need to convert below connection ids to variables" -->
-    1. Create dataflow.
+    1. Create a dataflow.
+
         ```bash
         curl --location 'https://platform.adobe.io/data/foundation/flowservice/flows' \
         --header "Authorization: Bearer $ACCESS_TOKEN" \
@@ -218,7 +230,9 @@ There are 2 ways to publish the journey; you may choose any of them:
             ]
         }'
         ```
+
     1. Get Base Connection. The result will contain inlet id URL required to send profile data.
+
         ```bash
         curl --location 'https://platform.adobe.io/data/foundation/flowservice/connections/e6527218-042b-4c45-98cd-753db9f4a7e3' \
         --header "Authorization: Bearer $ACCESS_TOKEN" \
@@ -237,6 +251,7 @@ There are 2 ways to publish the journey; you may choose any of them:
     1. `EMAIL` would be the email address of user, this is crucial to use distinct email id so that a fresh profile can be ingested.
 
 1. Finally execute the curl to ingest customer profile. Update `body.xdmEntity.consents.marketing.preferred` to `email`, `sms`, or `push` based on the channels you intend to verify. Also set corresponding `val` to `y`.
+
     ```bash
     curl --location 'https://dcs.adobedc.net/collection/ee492764395a581d74ffda72e27736b8a8b3e58d8b86d48fe174111e2bd0e668?synchronousValidation=true' \
     --header 'Content-Type: application/json' \
