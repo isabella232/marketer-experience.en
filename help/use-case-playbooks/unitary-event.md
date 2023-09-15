@@ -104,9 +104,9 @@ There are 2 ways to publish the journey; you may choose any of them:
     --header "x-api-key: platform_exim" \
     --header "Content-Type: application/json" \
     --data '{
-        "name": "Customer_Profile",
+        "name": "'$PROFILE_DATASET_NAME'",
         "schemaRef": {
-            "id": "'$SCHEMA_REF'",
+            "id": "'$PROFILE_SCHEMA_REF'",
             "contentType": "application/vnd.adobe.xed-full-notext+json; version=1"
         },
         "tags": {
@@ -154,8 +154,10 @@ There are 2 ways to publish the journey; you may choose any of them:
         }'
         ```
 
+        Obtain base connection id from the response and set the variable PROFILE_BASE_CONNECTION_ID=<base_connection_id>
+
         <!-- TODO: Provide instructions to set base connection id to a variable -->
-    1. Create source connection. Use the id from the result of step 1 to get base connection id.
+    1. Create source connection. 
 
         ```bash
         curl --location 'https://platform.adobe.io/data/foundation/flowservice/sourceConnections' \
@@ -167,13 +169,15 @@ There are 2 ways to publish the journey; you may choose any of them:
         --data '{
             "name": "AbandonedCartProduct_Source_ConnectionForCustomerProfile_1694458318",
             "description": "Marketer Playground Playbook-Validation Customer Profile Source Connection 1",
-            "baseConnectionId": $BASE_CONNECTION_ID,
+            "baseConnectionId": "'$PROFILE_BASE_CONNECTION_ID'",
             "connectionSpec": {
                 "id": "bc7b00d6-623a-4dfc-9fdb-f1240aeadaeb",
                 "version": "1.0"
             }
         }'
         ```
+
+        Obtain source connection id from the response and set the variable PROFILE_SOURCE_CONNECTION_ID=<source_connection_id>
 
     1. Create target connection.
 
@@ -191,7 +195,7 @@ There are 2 ways to publish the journey; you may choose any of them:
                 "format": "parquet_xdm",
                 "schema": {
                     "version": "application/vnd.adobe.xed-full+json;version=1",
-                    "id": "'$SCHEMA_REF'"
+                    "id": "'$PROFILE_SCHEMA_REF'"
                 },
                 "properties": null
             },
@@ -205,7 +209,8 @@ There are 2 ways to publish the journey; you may choose any of them:
         }
         ```
 
-        <!-- TODO : Might need to convert below connection ids to variables" -->
+        Obtain target connection id from the response and set the variable PROFILE_TARGET_CONNECTION_ID=<target_connection_id>
+
     1. Create a dataflow.
 
         ```bash
@@ -223,18 +228,20 @@ There are 2 ways to publish the journey; you may choose any of them:
                 "version": "1.0"
             },
             "sourceConnectionIds": [
-                "69c08c38-c756-44e5-9a14-d6e042944bbd"
+                "'$PROFILE_SOURCE_CONNECTION_ID'"
             ],
             "targetConnectionIds": [
-                "1a1dca2f-a603-4741-8911-3fa170536a58"
+                "'$PROFILE_TARGET_CONNECTION_ID'"
             ]
         }'
         ```
 
+        Obtain dataflow id from the response and set the variable PROFILE_DATAFLOW_ID=<dataflow_id>
+
     1. Get Base Connection. The result will contain inlet id URL required to send profile data.
 
         ```bash
-        curl --location 'https://platform.adobe.io/data/foundation/flowservice/connections/e6527218-042b-4c45-98cd-753db9f4a7e3' \
+        curl --location "https://platform.adobe.io/data/foundation/flowservice/connections/'$PROFILE_DATAFLOW_ID'" \
         --header "Authorization: Bearer $ACCESS_TOKEN" \
         --header "x-gw-ims-org-id: $ORG_ID" \
         --header "x-sandbox-name: $SANDBOX_NAME" \
@@ -242,7 +249,9 @@ There are 2 ways to publish the journey; you may choose any of them:
         --header "x-api-key: platform_exim"
         ```
 
-1. At this step you must have `CustomerProfile_dataset_id` in variable `PROFILE_DATASET_ID` and `CustomerProfile_inlet_id` in variable `PROFILE_INLET_ID`; if not, please refer step `3` or `4` respectively.
+        Obtain inlet id from the response and set the variable PROFILE_INLET_ID=<inlet_id>
+
+1. At this step you must have `PROFILE_DATASET_ID` and `PROFILE_INLET_ID` variables set in the terminal; if not, please refer step `3` or `4` respectively.
 1. To ingest customer, user need to store `customer_country_code`, `customer_mobile_no`, `customer_first_name`, `customer_last_name` and `email` in terminal window shell variables.
 
     1. `CUSTOMER_MOBILE_NUMBER` would be mobile number e.g. `+1 000-000-0000`
@@ -253,12 +262,12 @@ There are 2 ways to publish the journey; you may choose any of them:
 1. Finally execute the curl to ingest customer profile. Update `body.xdmEntity.consents.marketing.preferred` to `email`, `sms`, or `push` based on the channels you intend to verify. Also set corresponding `val` to `y`.
 
     ```bash
-    curl --location 'https://dcs.adobedc.net/collection/ee492764395a581d74ffda72e27736b8a8b3e58d8b86d48fe174111e2bd0e668?synchronousValidation=true' \
+    curl --location "'$PROFILE_INLET_ID'" \
     --header 'Content-Type: application/json' \
     --data-raw '{
         "header": {
             "schemaRef": {
-                "id": "'$SCHEMA_REF'",
+                "id": "'$PROFILE_SCHEMA_REF'",
                 "contentType": "application/vnd.adobe.xed-full+json;version=1.0"
             },
             "imsOrgId": "'$ORG_ID'",
@@ -270,7 +279,7 @@ There are 2 ways to publish the journey; you may choose any of them:
         "body": {
             "xdmMeta": {
                 "schemaRef": {
-                    "id": "'$SCHEMA_REF'",
+                    "id": "'$PROFILE_SCHEMA_REF'",
                     "contentType": "application/vnd.adobe.xed-full+json;version=1.0"
                 }
             },
@@ -308,26 +317,291 @@ There are 2 ways to publish the journey; you may choose any of them:
     }'
     ```
 
-## Ingest Event
+## Ingest Journey Trigger Event
 
 1. First time user need to create the **[!DNL event dataset]** and **[!DNL HTTP Streaming Inlet Connection for events]**
 1. If you already have created the **[!DNL event dataset]** and **[!DNL HTTP Streaming Inlet Connection for events]**, please skip to the step `5`.
 1. Trigger **[!DNL `Schemas Data Ingestion > AEP Demo Schema Ingestion > Create AEP Demo Schema InletId > Create Dataset`]** to create **[!DNL event dataset]**, this will store a `AEPDemoSchema_dataset_id` in postman environment variables
-1. Create **[!DNL HTTP Streaming Inlet Connection for events]**, use Postman APIs under **[!DNL Schemas Data Ingestion]** > **[!DNL AEP Demo Schema Ingestion]** > **[!DNL Create AEP Demo Schema InletId]**.
+1. Create an event dataset by executing the below cURL.
 
-    1. `AEPDemoSchema_dataset_id` must be available in postman environment variables, if not, refer step `3`
-    1. Trigger **[!DNL `CREATE Base Connection`]** to [!DNL create base connection]
-    1. Trigger **[!DNL `CREATE Source Connection`]** to [!DNL create source connection]
-    1. Trigger **[!DNL `CREATE Target Connection`]** to [!DNL create target connection]
-    1. Trigger **[!DNL `CREATE Dataflow`]** to [!DNL create dataflow]
-    1. Trigger **[!DNL `GET Base Connection`]**- this will automatically store `AEPDemoSchema_inlet_id` in the postman environment variables
+    ```bash
+    curl --location 'https://platform.adobe.io/data/foundation/catalog/dataSet' \
+    --header "Authorization: Bearer $ACCESS_TOKEN" \
+    --header "x-gw-ims-org-id: $ORG_ID" \
+    --header "x-sandbox-name: $SANDBOX_NAME" \
+    --header "x-api-key: platform_exim" \
+    --header "Content-Type: application/json" \
+    --data '{
+        "name": "'$EVENT_DATASET_NAME'",
+        "schemaRef": {
+            "id": "'$EVENT_SCHEMA_REF'",
+            "contentType": "application/vnd.adobe.xed-full-notext+json; version=1"
+        },
+        "tags": {
+            "unifiedProfile": [
+                "enabled:true"
+            ],
+            "unifiedIdentity": [
+                "enabled:true"
+            ]
+        },
+        "fileDescription": {
+            "persisted": true,
+            "containerFormat": "parquet",
+            "format": "parquet"
+        }
+    }'
+    ```
+    The response will be of the format "@/dataSets/<dataset_id>".
+    Set the variable in the terminal window as EVENT_DATASET_ID=<dataset_id> using the dataset_id from the response. This will be used in later cURLs.
 
-1. At this step you must have `AEPDemoSchema_dataset_id` and `AEPDemoSchema_inlet_id` in postman environment variables, if not, please refer step `3` or `4` respectively
-1. To ingest event, user need to change the time variable `timestamp` in request body of **[!DNL Schemas Data Ingestion]** > **[!DNL AEP Demo Schema Ingestion]** > **[!DNL AEP Demo Schema Streaming Ingestion]** in postman.
+1. Create **[!DNL HTTP Streaming Inlet Connection for events]**  with help of following steps.
+    <!-- TODO: Is the name unique? If so, we may need to generate and provide in variables.txt-->
+    1. Create a base connection.
 
-    1. `timestamp` would the time of event occurance, use the currrent timestamp e.g. `2023-07-21T16:37:52+05:30` adjust the time zone as per your need.
+        ```bash
+        curl --location 'https://platform.adobe.io/data/foundation/flowservice/connections?Cache-Control=no-cache' \
+        --header "Authorization: Bearer $ACCESS_TOKEN" \
+        --header "x-gw-ims-org-id: $ORG_ID" \
+        --header "x-sandbox-name: $SANDBOX_NAME" \
+        --header "x-api-key: platform_exim" \
+        --header "Content-Type: application/json" \
+        --data '{
+            "name": "AbandonedCartProduct_Base_ConnectionForAEPDemoSchema_1694461448",
+            "description": "Marketer Playground Playbook-Validation AEP Demo Schema Base Connection 1",
+            "auth": {
+                "specName": "Streaming Connection",
+                "params": {
+                    "dataType": "xdm"
+                }
+            },
+            "connectionSpec": {
+                "id": "bc7b00d6-623a-4dfc-9fdb-f1240aeadaeb",
+                "version": "1.0"
+            }
+        }'
+        ```
 
-1. Trigger **[!DNL Schemas Data Ingestion > AEP Demo Schema Ingestion > AEP Demo Schema Streaming Ingestion]** to ingest the event, so that journey can be triggered
+        Obtain base connection id from the response and set the variable EVENT_BASE_CONNECTION_ID=<base_connection_id>
+
+    1. Create source connection.
+
+        ```bash
+        curl --location 'https://platform.adobe.io/data/foundation/flowservice/sourceConnections' \
+        --header "Authorization: Bearer $ACCESS_TOKEN" \
+        --header "x-gw-ims-org-id: $ORG_ID" \
+        --header "x-sandbox-name: $SANDBOX_NAME" \
+        --header "x-api-key: platform_exim" \
+        --header "Content-Type: application/json" \
+        --data '{
+            "name": "AbandonedCartProduct_Source_ConnectionForAEPDemoSchema_1694461464",
+            "description": "Marketer Playground Playbook-Validation AEP Demo Schema Source Connection 1",
+            "baseConnectionId": "'$EVENT_BASE_CONNECTION_ID'",
+            "connectionSpec": {
+                "id": "bc7b00d6-623a-4dfc-9fdb-f1240aeadaeb",
+                "version": "1.0"
+            }
+        }'
+        ```
+
+        Obtain source connection id from the response and set the variable EVENT_SOURCE_CONNECTION_ID=<source_connection_id>
+
+    1. Create target connection.
+
+        ```bash
+        curl --location 'https://platform.adobe.io/data/foundation/flowservice/sourceConnections' \
+        --header "Authorization: Bearer $ACCESS_TOKEN" \
+        --header "x-gw-ims-org-id: $ORG_ID" \
+        --header "x-sandbox-name: $SANDBOX_NAME" \
+        --header "x-api-key: platform_exim" \
+        --header "Content-Type: application/json" \
+        --data '{
+            "name": "AbandonedCartProduct_Target_ConnectionForAEPDemoSchema_1694802667",
+            "description": "Marketer Playground Playbook-Validation AEP Demo Schema Target Connection 1",
+            "data": {
+                "format": "parquet_xdm",
+                "schema": {
+                    "version": "application/vnd.adobe.xed-full+json;version=1",
+                    "id": "'$EVENT_SCHEMA_REF'"
+                },
+                "properties": null
+            },
+            "connectionSpec": {
+                "id": "c604ff05-7f1a-43c0-8e18-33bf874cb11c",
+                "version": "1.0"
+            },
+            "params": {
+                "dataSetId": "'$EVENT_DATASET_ID'"
+            }
+        }'
+        ```
+
+        Obtain target connection id from the response and set the variable EVENT_TARGET_CONNECTION_ID=<target_connection_id>
+
+    1. Create a dataflow.
+
+        ```bash
+        curl --location 'https://platform.adobe.io/data/foundation/flowservice/flows' \
+        --header "Authorization: Bearer $ACCESS_TOKEN" \
+        --header "x-gw-ims-org-id: $ORG_ID" \
+        --header "x-sandbox-name: $SANDBOX_NAME" \
+        --header "x-api-key: platform_exim" \
+        --header "Content-Type: application/json" \
+        --data '{
+            "name": "AbandonedCartProduct_Dataflow_ForCustomerAEPDemoSchema_1694461564",
+            "description": "Marketer Playground Playbook-Validation AEP Demo Schema Dataflow 1",
+            "flowSpec": {
+                "id": "d8a6f005-7eaf-4153-983e-e8574508b877",
+                "version": "1.0"
+            },
+            "sourceConnectionIds": [
+                "'$EVENT_SOURCE_CONNECTION_ID'"
+            ],
+            "targetConnectionIds": [
+                "'$EVENT_TARGET_CONNECTION_ID'"
+            ]
+        }'
+        ```
+
+        Obtain dataflow id from the response and set the variable EVENT_DATAFLOW_ID=<dataflow_id>
+
+    1. Get Base Connection. The result will contain inlet id URL required to send profile data.
+
+    ```bash
+    curl --location "https://platform.adobe.io/data/foundation/flowservice/connections/'$EVENT_DATAFLOW_ID'" \
+        --header "Authorization: Bearer $ACCESS_TOKEN" \
+        --header "x-gw-ims-org-id: $ORG_ID" \
+        --header "x-sandbox-name: $SANDBOX_NAME" \
+        --header "x-api-key: platform_exim" \
+        --header "Content-Type: application/json" 
+    ```
+
+    Obtain inlet id from the response and set the variable EVENT_INLET_ID=<inlet_id>
+
+1. At this step you must have `EVENT_DATASET_ID` and `EVENT_INLET_ID` variables set in the terminal; if not, please refer step `3` or `4` respectively.
+1. To ingest event, user need to change the time variable `timestamp` in request body of cURL below.
+
+    1. `timestamp` would the time of event occurance, use the timestamp in UTC timezone e.g. `2023-09-05T23:57:00.071+00:00`.
+    1. Set a unique value for variable `UNIQUE_EVENT_ID`.
+
+    ```bash
+    curl --location "'$EVENT_INLET_ID'" \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "header": {
+            "schemaRef": {
+                "id": "'$EVENT_SCHEMA_REF'",
+                "contentType": "application/vnd.adobe.xed-full+json;version=1.0"
+            },
+            "imsOrgId": "'$ORG_ID'",
+            "datasetId": "'$EVENT_DATASET_ID'",
+            "source": {
+                "name": "Streaming dataflow - 8/31/2023 9:04:25 PM"
+            }
+        },
+        "body": {
+            "xdmMeta": {
+                "schemaRef": {
+                    "'$EVENT_SCHEMA_REF'",
+                    "contentType": "application/vnd.adobe.xed-full+json;version=1.0"
+                }
+            },
+            "xdmEntity": {
+                "endUserIDs": {
+                    "_experience": {
+                        "aaid": {
+                            "id": "'$EMAIL'"
+                        },
+                        "emailid": {
+                            "id": "'$EMAIL'"
+                        }
+                    }
+                },
+                "_experience": {
+                    "analytics": {
+                        "customDimensions": {
+                            "eVars": {
+                            "eVar235": "AC11147"
+                            }
+                        }
+                    }
+                },
+                "_id": "'$UNIQUE_EVENT_ID'",
+                "commerce": {
+                    "productListAdds": {
+                        "value": 11498
+                    }
+                },
+                "eventType": "commerce.productListAdds",
+                "productListItems": [
+                    {
+                        "_id": "ACS1620",
+                        "SKU": "P1",
+                        "_experience": {
+                            "analytics": {
+                            "customDimensions": {
+                                "eVars": {
+                                    "eVar1": "Pants"
+                                }
+                            }
+                            }
+                        },
+                        "currencyCode": "USD",
+                        "name": "Sample value",
+                        "priceTotal": 30841.13,
+                        "product": "https://ns.adobe.com/xdm/common/uri",
+                        "productAddMethod": "Sample value",
+                        "quantity": 1
+                    },
+                    {
+                        "_id": "ACS1729",
+                        "SKU": "P2",
+                        "_experience": {
+                            "analytics": {
+                                "customDimensions": {
+                                    "eVars": {
+                                        "eVar1": "Galliano"
+                                    }
+                                }
+                            }
+                        },
+                        "currencyCode": "USD",
+                        "name": "Sample value",
+                        "priceTotal": 20841.13,
+                        "product": "https://ns.adobe.com/xdm/common/uri",
+                        "productAddMethod": "Sample value",
+                        "quantity": 2
+                    }
+                ],
+                "timestamp": "2023-09-05T23:57:00.071+00:00",
+                "web": {
+                    "webInteraction": {
+                        "URL": "https://experienceleague.adobe.com/docs/experience-platform/edge/data-collection/collect-commerce-data.html?lang=en",
+                        "name": "Sample value",
+                        "region": "Sample value"
+                    },
+                    "webPageDetails": {
+                        "URL": "https://experienceleague.adobe.com/docs/experience-platform/edge/data-collection/collect-commerce-data.html?lang=en",
+                        "isErrorPage": false,
+                        "isHomePage": false,
+                        "name": "Sample value",
+                        "pageViews": {
+                            "id": "Sample value",
+                            "value": 1
+                        },
+                        "server": "Sample value",
+                        "siteSection": "Sample value",
+                        "viewName": "Sample value"
+                    },
+                    "webReferrer": {
+                    "URL": "Sample value",
+                    "type": "internal"
+                    }
+                }
+            }
+        }
+    }'
+    ```
 
 ## Final Validation
 
