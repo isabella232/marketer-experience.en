@@ -58,7 +58,8 @@ There are 2 ways to publish the journey; you may choose any of them:
 
     1. Publish the journey. The response will contain job id needed in next step to fetch journey publish status.
 
-        ``` bash
+        ```bash
+
         curl --location --request POST 'https://journey-private.adobe.io/authoring/jobs/journeyVersions/$JOURNEY_ID/deploy' \
         --header "Accept: */*" \
         --header "Authorization: Bearer $ACCESS_TOKEN" \
@@ -66,18 +67,21 @@ There are 2 ways to publish the journey; you may choose any of them:
         --header "x-api-key: voyager_ui" \
         --header "x-gw-ims-org-id: $ORG_ID" \
         --header "x-sandbox-name: $SANDBOX_NAME"
+        
         ```
 
     <!-- TODO: How to get and set JOB_ID? -->
     1. Journey publish might take some time, so in order to check the status execute below cURL, until the `response.status` is `SUCCESS`, make sure to wait 10-15 seconds if journey publish takes time.
 
         ```bash
+
         curl --location 'https://journey-private.adobe.io/authoring/jobs/$JOB_ID' \
         --header 'Authorization: Bearer $ACCESS_TOKEN' \
         --header 'Content-Type: application/json' \
         --header 'x-api-key: voyager_ui' \
         --header 'x-gw-ims-org-id: $ORG_ID' \
         --header 'x-sandbox-name: $SANDBOX_NAME'
+
         ```
 
     >[!NOTE]
