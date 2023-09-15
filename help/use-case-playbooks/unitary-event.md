@@ -352,6 +352,7 @@ There are 2 ways to publish the journey; you may choose any of them:
         }
     }'
     ```
+    
     The response will be of the format "@/dataSets/<dataset_id>".
     Set the variable in the terminal window as EVENT_DATASET_ID=<dataset_id> using the dataset_id from the response. This will be used in later cURLs.
 
