@@ -20,31 +20,14 @@ description: This is an intruction page for simulating the '[!UICONTROL Unitary 
 
 * Use Playbook to create the instances assets like **[!UICONTROL Journey]**, **[!UICONTROL Schemas]**, **[!UICONTROL Segments]**, **[!UICONTROL Messages]** etc.
 
-Created assets will be shown on `Bill Of Material` Page
+* Created assets will be shown on `Bill Of Material` Page
 
 <!-- TODO: attached image needs to change once postman is removed from UI -->
 ![Bill Of Material Page](../assets/bom-page.png)
 
-## Prepare your terminal with required variables
-
-1. Visit **[!UICONTROL Use Case Playbook]** application.
-1. Click on the respective **[!UICONTROL Playbook]** card to visit **[!UICONTROL Playbook]** details page.
-1. Visit **[!UICONTROL Bill Of Material]** page and find the **[!UICONTROL Sample data]** section.
-1. Download the `variables.txt` by clicking the respective button on the UI.
-1. Export all the variables with values in your terminal window.
-
 ## Fetch IMS Token
 
->[!NOTE]
->
->All Environment variables are case sensitive so please always use the exact variable name.
-
 1. Please follow [Authenticate and access Experience Platform APIs](https://experienceleague.adobe.com/docs/experience-platform/landing/platform-apis/api-authentication.html) documentation to generate the Access Token.
-1. Set the Access Token value in a variables named `ACCESS_TOKEN` in current shell.
-
->[!IMPORTANT]
->
->Before executing any cURLs, make sure all required environment variables are set.
 
 ## Publish the Journey created by Playbook
 
@@ -62,27 +45,22 @@ There are 2 ways to publish the journey; you may choose any of them:
         curl --location --request POST 'https://journey-private.adobe.io/authoring/jobs/journeyVersions/$JOURNEY_ID/deploy' \
         --header "Accept: */*" \
         --header "Authorization: Bearer $ACCESS_TOKEN" \
-        --header "Content-Type: application/json" \
-        --header "x-api-key: voyager_ui" \
+        --header "x-api-key: $API_KEY" \
         --header "x-gw-ims-org-id: $ORG_ID" \
-        --header "x-sandbox-name: $SANDBOX_NAME"
+        --header "x-sandbox-name: $SANDBOX_NAME" \
+        --header "Content-Type: application/json" 
         ```
 
-    <!-- TODO: How to get and set JOB_ID? -->
     1. Journey publish might take some time, so in order to check the status execute below cURL, until the `response.status` is `SUCCESS`, make sure to wait 10-15 seconds if journey publish takes time.
 
         ```bash
         curl --location 'https://journey-private.adobe.io/authoring/jobs/$JOB_ID' \
         --header "Authorization: Bearer $ACCESS_TOKEN" \
-        --header "Content-Type: application/json" \
-        --header "x-api-key: voyager_ui" \
+        --header "x-api-key: $API_KEY" \
         --header "x-gw-ims-org-id: $ORG_ID" \
-        --header "x-sandbox-name: $SANDBOX_NAME"
+        --header "x-sandbox-name: $SANDBOX_NAME" \
+        --header "Content-Type: application/json"
         ```
-
-    >[!NOTE]
-    >
-    >All Environment variables are case sensitive so please always use the exact variable name.
 
 ## Ingest the Customer Profile
 
@@ -101,7 +79,7 @@ There are 2 ways to publish the journey; you may choose any of them:
     --header "Authorization: Bearer $ACCESS_TOKEN" \
     --header "x-gw-ims-org-id: $ORG_ID" \
     --header "x-sandbox-name: $SANDBOX_NAME" \
-    --header "x-api-key: platform_exim" \
+    --header "x-api-key: $API_KEY" \
     --header "Content-Type: application/json" \
     --data '{
         "name": "'$PROFILE_DATASET_NAME'",
@@ -125,8 +103,7 @@ There are 2 ways to publish the journey; you may choose any of them:
     }'
     ```
 
-    The response will be of the format `"@/dataSets/<dataset_id>"`. 
-    Set the variable in the terminal window as `PROFILE_DATASET_ID=<dataset_id>` using the `dataset_id` from the response. This will be used in later cURLs.
+    The response will be of the format `"@/dataSets/<PROFILE_DATASET_ID>"`. 
 
 1. Create **[!DNL HTTP Streaming Inlet Connection]** with help of following steps.
     1. Create a base connection.
@@ -136,8 +113,8 @@ There are 2 ways to publish the journey; you may choose any of them:
         --header "Authorization: Bearer $ACCESS_TOKEN" \
         --header "x-gw-ims-org-id: $ORG_ID" \
         --header "x-sandbox-name: $SANDBOX_NAME" \
+        --header "x-api-key: $API_KEY" \
         --header "Content-Type: application/json" \
-        --header "x-api-key: platform_exim" \
         --data '{
             "name": "AbandonedCartProduct_Base_ConnectionForCustomerProfile_1694458293",
             "description": "Marketer Playground Playbook-Validation Customer Profile Base Connection 1",
@@ -154,9 +131,8 @@ There are 2 ways to publish the journey; you may choose any of them:
         }'
         ```
 
-        Obtain base connection id from the response and set the variable PROFILE_BASE_CONNECTION_ID=<base_connection_id>
+        Obtain base connection id from the response and use it in place of `PROFILE_BASE_CONNECTION_ID` in following cURLs
 
-        <!-- TODO: Provide instructions to set base connection id to a variable -->
     1. Create source connection. 
 
         ```bash
@@ -165,7 +141,7 @@ There are 2 ways to publish the journey; you may choose any of them:
         --header "x-gw-ims-org-id: $ORG_ID" \
         --header "x-sandbox-name: $SANDBOX_NAME" \
         --header "Content-Type: application/json" \
-        --header "x-api-key: platform_exim" \
+        --header "x-api-key: $API_KEY" \
         --data '{
             "name": "AbandonedCartProduct_Source_ConnectionForCustomerProfile_1694458318",
             "description": "Marketer Playground Playbook-Validation Customer Profile Source Connection 1",
@@ -177,7 +153,7 @@ There are 2 ways to publish the journey; you may choose any of them:
         }'
         ```
 
-        Obtain source connection id from the response and set the variable PROFILE_SOURCE_CONNECTION_ID=<source_connection_id>
+        Obtain source connection id from the response and use it in place of `PROFILE_SOURCE_CONNECTION_ID`
 
     1. Create target connection.
 
@@ -187,7 +163,7 @@ There are 2 ways to publish the journey; you may choose any of them:
         --header "x-gw-ims-org-id: $ORG_ID" \
         --header "x-sandbox-name: $SANDBOX_NAME" \
         --header "Content-Type: application/json" \
-        --header "x-api-key: platform_exim" \
+        --header "x-api-key: $API_KEY" \
         --data '{
             "name": "AbandonedCartProduct_Target_ConnectionForCustomerProfile_1694458407",
             "description": "Marketer Playground Playbook-Validation Customer Profile Target Connection 1",
@@ -209,7 +185,7 @@ There are 2 ways to publish the journey; you may choose any of them:
         }
         ```
 
-        Obtain target connection id from the response and set the variable PROFILE_TARGET_CONNECTION_ID=<target_connection_id>
+        Obtain target connection id from the response and use it in place of `PROFILE_TARGET_CONNECTION_ID`
 
     1. Create a dataflow.
 
@@ -219,7 +195,7 @@ There are 2 ways to publish the journey; you may choose any of them:
         --header "x-gw-ims-org-id: $ORG_ID" \
         --header "x-sandbox-name: $SANDBOX_NAME" \
         --header "Content-Type: application/json" \
-        --header "x-api-key: platform_exim" \
+        --header "x-api-key: $API_KEY" \
         --data '{
             "name": "AbandonedCartProduct_Dataflow_ForCustomerCustomerProfile_1694460528",
             "description": "Marketer Playground Playbook-Validation Customer Profile Dataflow 1",
@@ -236,7 +212,7 @@ There are 2 ways to publish the journey; you may choose any of them:
         }'
         ```
 
-        Obtain dataflow id from the response and set the variable PROFILE_DATAFLOW_ID=<dataflow_id>
+        Obtain dataflow id from the response and use it in place of  `PROFILE_DATAFLOW_ID`
 
     1. Get Base Connection. The result will contain inlet id URL required to send profile data.
 
@@ -246,13 +222,13 @@ There are 2 ways to publish the journey; you may choose any of them:
         --header "x-gw-ims-org-id: $ORG_ID" \
         --header "x-sandbox-name: $SANDBOX_NAME" \
         --header "Content-Type: application/json" \
-        --header "x-api-key: platform_exim"
+        --header "x-api-key: $API_KEY"
         ```
 
-        Obtain inlet id from the response and set the variable PROFILE_INLET_ID=<inlet_id>
+        Obtain inlet id from the response and use it in place of `PROFILE_INLET_ID`
 
-1. At this step you must have `PROFILE_DATASET_ID` and `PROFILE_INLET_ID` variables set in the terminal; if not, please refer step `3` or `4` respectively.
-1. To ingest customer, user need to store `customer_country_code`, `customer_mobile_no`, `customer_first_name`, `customer_last_name` and `email` in terminal window shell variables.
+1. At this step user must have values of `PROFILE_DATASET_ID` and `PROFILE_INLET_ID`; if not, please refer step `3` or `4` respectively.
+1. To ingest customer, user need to replace `CUSTOMER_MOBILE_NUMBER`, `CUSTOMER_FIRST_NAME`, `CUSTOMER_LAST_NAME` and `EMAIL` in below cURLs.
 
     1. `CUSTOMER_MOBILE_NUMBER` would be mobile number e.g. `+1 000-000-0000`
     1. `CUSTOMER_FIRST_NAME` would be the first name of user
@@ -321,7 +297,6 @@ There are 2 ways to publish the journey; you may choose any of them:
 
 1. First time user need to create the **[!DNL event dataset]** and **[!DNL HTTP Streaming Inlet Connection for events]**
 1. If you already have created the **[!DNL event dataset]** and **[!DNL HTTP Streaming Inlet Connection for events]**, please skip to the step `5`.
-1. Trigger **[!DNL `Schemas Data Ingestion > AEP Demo Schema Ingestion > Create AEP Demo Schema InletId > Create Dataset`]** to create **[!DNL event dataset]**, this will store a `AEPDemoSchema_dataset_id` in postman environment variables
 1. Create an event dataset by executing the below cURL.
 
     ```bash
@@ -329,7 +304,7 @@ There are 2 ways to publish the journey; you may choose any of them:
     --header "Authorization: Bearer $ACCESS_TOKEN" \
     --header "x-gw-ims-org-id: $ORG_ID" \
     --header "x-sandbox-name: $SANDBOX_NAME" \
-    --header "x-api-key: platform_exim" \
+    --header "x-api-key: $API_KEY" \
     --header "Content-Type: application/json" \
     --data '{
         "name": "'$EVENT_DATASET_NAME'",
@@ -353,8 +328,7 @@ There are 2 ways to publish the journey; you may choose any of them:
     }'
     ```
     
-    The response will be of the format "@/dataSets/<dataset_id>".
-    Set the variable in the terminal window as EVENT_DATASET_ID=<dataset_id> using the dataset_id from the response. This will be used in later cURLs.
+    The response will be of the format `"@/dataSets/<EVENT_DATASET_ID>"`
 
 1. Create **[!DNL HTTP Streaming Inlet Connection for events]**  with help of following steps.
     <!-- TODO: Is the name unique? If so, we may need to generate and provide in variables.txt-->
@@ -365,7 +339,7 @@ There are 2 ways to publish the journey; you may choose any of them:
         --header "Authorization: Bearer $ACCESS_TOKEN" \
         --header "x-gw-ims-org-id: $ORG_ID" \
         --header "x-sandbox-name: $SANDBOX_NAME" \
-        --header "x-api-key: platform_exim" \
+        --header "x-api-key: $API_KEY" \
         --header "Content-Type: application/json" \
         --data '{
             "name": "AbandonedCartProduct_Base_ConnectionForAEPDemoSchema_1694461448",
@@ -383,7 +357,7 @@ There are 2 ways to publish the journey; you may choose any of them:
         }'
         ```
 
-        Obtain base connection id from the response and set the variable EVENT_BASE_CONNECTION_ID=<base_connection_id>
+        Obtain base connection id from the response and use it in place of `EVENT_BASE_CONNECTION_ID`
 
     1. Create source connection.
 
@@ -392,7 +366,7 @@ There are 2 ways to publish the journey; you may choose any of them:
         --header "Authorization: Bearer $ACCESS_TOKEN" \
         --header "x-gw-ims-org-id: $ORG_ID" \
         --header "x-sandbox-name: $SANDBOX_NAME" \
-        --header "x-api-key: platform_exim" \
+        --header "x-api-key: $API_KEY" \
         --header "Content-Type: application/json" \
         --data '{
             "name": "AbandonedCartProduct_Source_ConnectionForAEPDemoSchema_1694461464",
@@ -405,7 +379,7 @@ There are 2 ways to publish the journey; you may choose any of them:
         }'
         ```
 
-        Obtain source connection id from the response and set the variable EVENT_SOURCE_CONNECTION_ID=<source_connection_id>
+        Obtain source connection id from the response and use it in place of `EVENT_SOURCE_CONNECTION_ID`
 
     1. Create target connection.
 
@@ -414,7 +388,7 @@ There are 2 ways to publish the journey; you may choose any of them:
         --header "Authorization: Bearer $ACCESS_TOKEN" \
         --header "x-gw-ims-org-id: $ORG_ID" \
         --header "x-sandbox-name: $SANDBOX_NAME" \
-        --header "x-api-key: platform_exim" \
+        --header "x-api-key: $API_KEY" \
         --header "Content-Type: application/json" \
         --data '{
             "name": "AbandonedCartProduct_Target_ConnectionForAEPDemoSchema_1694802667",
@@ -437,7 +411,7 @@ There are 2 ways to publish the journey; you may choose any of them:
         }'
         ```
 
-        Obtain target connection id from the response and set the variable EVENT_TARGET_CONNECTION_ID=<target_connection_id>
+        Obtain target connection id from the response and use it in place of `EVENT_TARGET_CONNECTION_ID`
 
     1. Create a dataflow.
 
@@ -446,7 +420,7 @@ There are 2 ways to publish the journey; you may choose any of them:
         --header "Authorization: Bearer $ACCESS_TOKEN" \
         --header "x-gw-ims-org-id: $ORG_ID" \
         --header "x-sandbox-name: $SANDBOX_NAME" \
-        --header "x-api-key: platform_exim" \
+        --header "x-api-key: $API_KEY" \
         --header "Content-Type: application/json" \
         --data '{
             "name": "AbandonedCartProduct_Dataflow_ForCustomerAEPDemoSchema_1694461564",
@@ -464,7 +438,7 @@ There are 2 ways to publish the journey; you may choose any of them:
         }'
         ```
 
-        Obtain dataflow id from the response and set the variable EVENT_DATAFLOW_ID=<dataflow_id>
+        Obtain dataflow id from the response and use it in place of `EVENT_DATAFLOW_ID`
 
     1. Get Base Connection. The result will contain inlet id URL required to send profile data.
 
@@ -473,16 +447,16 @@ There are 2 ways to publish the journey; you may choose any of them:
         --header "Authorization: Bearer $ACCESS_TOKEN" \
         --header "x-gw-ims-org-id: $ORG_ID" \
         --header "x-sandbox-name: $SANDBOX_NAME" \
-        --header "x-api-key: platform_exim" \
+        --header "x-api-key: $API_KEY" \
         --header "Content-Type: application/json" 
     ```
 
-    Obtain inlet id from the response and set the variable EVENT_INLET_ID=<inlet_id>
+    Obtain inlet id from the response and use it in place of `EVENT_INLET_ID`
 
-1. At this step you must have `EVENT_DATASET_ID` and `EVENT_INLET_ID` variables set in the terminal; if not, please refer step `3` or `4` respectively.
-1. To ingest event, user need to change the time variable `timestamp` in request body of cURL below.
+1. At this step user must have values of `EVENT_DATASET_ID` and `EVENT_INLET_ID`; if not, please refer step `3` or `4` respectively.
+1. To ingest event, user need to change the time variable `TIMESTAMP` in request body of cURL below.
 
-    1. `timestamp` would the time of event occurance, use the timestamp in UTC timezone e.g. `2023-09-05T23:57:00.071+00:00`.
+    1. `TIMESTAMP` would the time of event occurance, use the timestamp in UTC timezone e.g. `2023-09-05T23:57:00.071+00:00`.
     1. Set a unique value for variable `UNIQUE_EVENT_ID`.
 
     ```bash
@@ -574,7 +548,7 @@ There are 2 ways to publish the journey; you may choose any of them:
                         "quantity": 2
                     }
                 ],
-                "timestamp": "2023-09-05T23:57:00.071+00:00",
+                "timestamp": "'$TIMESTAMP'",
                 "web": {
                     "webInteraction": {
                         "URL": "https://experienceleague.adobe.com/docs/experience-platform/edge/data-collection/collect-commerce-data.html?lang=en",
