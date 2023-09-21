@@ -182,7 +182,7 @@ There are 2 ways to publish the journey; you may choose any of them:
             "params": {
                 "dataSetId": "'$PROFILE_DATASET_ID'"
             }
-        }
+        }'
         ```
 
         Obtain target connection id from the response and use it in place of `PROFILE_TARGET_CONNECTION_ID`
@@ -214,10 +214,10 @@ There are 2 ways to publish the journey; you may choose any of them:
 
         Obtain dataflow id from the response and use it in place of  `PROFILE_DATAFLOW_ID`
 
-    1. Get Base Connection. The result will contain inlet id URL required to send profile data.
+    1. Get Base Connection. The result will contain inletUrl required to send profile data.
 
         ```bash
-        curl --location "https://platform.adobe.io/data/foundation/flowservice/connections/'$PROFILE_DATAFLOW_ID'" \
+        curl --location "https://platform.adobe.io/data/foundation/flowservice/connections/$PROFILE_BASE_CONNECTION_ID" \
         --header "Authorization: Bearer $ACCESS_TOKEN" \
         --header "x-gw-ims-org-id: $ORG_ID" \
         --header "x-sandbox-name: $SANDBOX_NAME" \
@@ -225,7 +225,7 @@ There are 2 ways to publish the journey; you may choose any of them:
         --header "x-api-key: $API_KEY"
         ```
 
-        Obtain inlet id from the response and use it in place of `PROFILE_INLET_ID`
+        Obtain inletUrl from the response and use it in place of `PROFILE_INLET_ID`
 
 1. At this step user must have values of `PROFILE_DATASET_ID` and `PROFILE_INLET_ID`; if not, please refer step `3` or `4` respectively.
 1. To ingest customer, user need to replace `CUSTOMER_MOBILE_NUMBER`, `CUSTOMER_FIRST_NAME`, `CUSTOMER_LAST_NAME` and `EMAIL` in below cURLs.
@@ -238,7 +238,7 @@ There are 2 ways to publish the journey; you may choose any of them:
 1. Finally execute the curl to ingest customer profile. Update `body.xdmEntity.consents.marketing.preferred` to `email`, `sms`, or `push` based on the channels you intend to verify. Also set corresponding `val` to `y`.
 
     ```bash
-    curl --location "'$PROFILE_INLET_ID'" \
+    curl --location "$PROFILE_INLET_ID?synchronousValidation=true" \
     --header 'Content-Type: application/json' \
     --data-raw '{
         "header": {
@@ -440,10 +440,10 @@ There are 2 ways to publish the journey; you may choose any of them:
 
         Obtain dataflow id from the response and use it in place of `EVENT_DATAFLOW_ID`
 
-    1. Get Base Connection. The result will contain inlet id URL required to send profile data.
+    1. Get Base Connection. The result will contain inletUrl required to send profile data.
 
     ```bash
-    curl --location "https://platform.adobe.io/data/foundation/flowservice/connections/'$EVENT_DATAFLOW_ID'" \
+    curl --location "https://platform.adobe.io/data/foundation/flowservice/connections/$EVENT_BASE_CONNECTION_ID" \
         --header "Authorization: Bearer $ACCESS_TOKEN" \
         --header "x-gw-ims-org-id: $ORG_ID" \
         --header "x-sandbox-name: $SANDBOX_NAME" \
@@ -451,7 +451,7 @@ There are 2 ways to publish the journey; you may choose any of them:
         --header "Content-Type: application/json" 
     ```
 
-    Obtain inlet id from the response and use it in place of `EVENT_INLET_ID`
+    Obtain inletUrl from the response and use it in place of `EVENT_INLET_ID`
 
 1. At this step user must have values of `EVENT_DATASET_ID` and `EVENT_INLET_ID`; if not, please refer step `3` or `4` respectively.
 1. To ingest event, user need to change the time variable `TIMESTAMP` in request body of cURL below.
@@ -460,7 +460,7 @@ There are 2 ways to publish the journey; you may choose any of them:
     1. Set a unique value for variable `UNIQUE_EVENT_ID`.
 
     ```bash
-    curl --location "'$EVENT_INLET_ID'" \
+    curl --location "$EVENT_INLET_ID?synchronousValidation=true" \
     --header 'Content-Type: application/json' \
     --data-raw '{
         "header": {
