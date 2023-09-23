@@ -25,10 +25,62 @@ description: This is an intruction page for simulating the '[!UICONTROL Unitary 
 <!-- TODO: attached image needs to change once postman is removed from UI -->
 ![Bill Of Material Page](../assets/bom-page.png)
 
->[!PRO-TIP]
+>[!TIP]
 >
 >If you are using a terminal to run the curls, you can set variable values before running the curls so that there is no need to replace those values in individual curls.
 >For e.g: If you set `ORG_ID=************@AdobeOrg`, shell will automatically substitue every occurrence of `$ORG_ID` with the value, so you can copy, paste, and execute the curls below without any modification.
+>
+> Following variables are used throughout this document
+>
+> ACCESS_TOKEN
+>
+> API_KEY
+>
+> ORG_ID
+>
+> SANDBOX_NAME
+>
+> PROFILE_SCHEMA_REF
+>
+> PROFILE_DATASET_NAME
+>
+> PROFILE_DATASET_ID
+>
+> JOURNEY_ID
+>
+> PROFILE_BASE_CONNECTION_ID
+>
+> PROFILE_SOURCE_CONNECTION_ID
+>
+> PROFILE_TARGET_CONNECTION_ID
+>
+> PROFILE_INLET_URL
+>
+> CUSTOMER_MOBILE_NUMBER
+>
+> CUSTOMER_FIRST_NAME
+>
+> CUSTOMER_LAST_NAME
+>
+> EMAIL
+>
+> EVENT_SCHEMA_REF
+>
+> EVENT_DATASET_NAME
+>
+> EVENT_DATASET_ID
+>
+> EVENT_BASE_CONNECTION_ID
+>
+> EVENT_SOURCE_CONNECTION_ID
+>
+> EVENT_TARGET_CONNECTION_ID
+>
+> EVENT_INLET_URL
+>
+> TIMESTAMP
+>
+> UNIQUE_EVENT_ID
 
 ## Fetch IMS Token
 
