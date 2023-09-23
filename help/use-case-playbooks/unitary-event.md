@@ -217,8 +217,6 @@ There are 2 ways to publish the journey; you may choose any of them:
         }'
         ```
 
-        Obtain dataflow id from the response and use it in place of  `PROFILE_DATAFLOW_ID`
-
     1. Get Base Connection. The result will contain inletUrl required to send profile data.
 
         ```bash
@@ -230,9 +228,9 @@ There are 2 ways to publish the journey; you may choose any of them:
         --header "x-api-key: $API_KEY"
         ```
 
-        Obtain inletUrl from the response and use it in place of `PROFILE_INLET_ID`
+        Obtain inletUrl from the response and use it in place of `PROFILE_INLET_URL`
 
-1. At this step user must have values of `PROFILE_DATASET_ID` and `PROFILE_INLET_ID`; if not, please refer step `3` or `4` respectively.
+1. At this step user must have values of `PROFILE_DATASET_ID` and `PROFILE_INLET_URL`; if not, please refer step `3` or `4` respectively.
 1. To ingest customer, user need to replace `CUSTOMER_MOBILE_NUMBER`, `CUSTOMER_FIRST_NAME`, `CUSTOMER_LAST_NAME` and `EMAIL` in below cURLs.
 
     1. `CUSTOMER_MOBILE_NUMBER` would be mobile number e.g. `+1 000-000-0000`
@@ -243,7 +241,7 @@ There are 2 ways to publish the journey; you may choose any of them:
 1. Finally execute the curl to ingest customer profile. Update `body.xdmEntity.consents.marketing.preferred` to `email`, `sms`, or `push` based on the channels you intend to verify. Also set corresponding `val` to `y`.
 
     ```bash
-    curl --location "$PROFILE_INLET_ID?synchronousValidation=true" \
+    curl --location "$PROFILE_INLET_URL?synchronousValidation=true" \
     --header 'Content-Type: application/json' \
     --data-raw '{
         "header": {
@@ -443,8 +441,6 @@ There are 2 ways to publish the journey; you may choose any of them:
         }'
         ```
 
-        Obtain dataflow id from the response and use it in place of `EVENT_DATAFLOW_ID`
-
     1. Get Base Connection. The result will contain inletUrl required to send profile data.
 
     ```bash
@@ -456,9 +452,9 @@ There are 2 ways to publish the journey; you may choose any of them:
         --header "Content-Type: application/json" 
     ```
 
-    Obtain inletUrl from the response and use it in place of `EVENT_INLET_ID`
+    Obtain inletUrl from the response and use it in place of `EVENT_INLET_URL`
 
-1. At this step user must have values of `EVENT_DATASET_ID` and `EVENT_INLET_ID`; if not, please refer step `3` or `4` respectively.
+1. At this step user must have values of `EVENT_DATASET_ID` and `EVENT_INLET_URL`; if not, please refer step `3` or `4` respectively.
 1. To ingest event, user need to change the time variable `TIMESTAMP` in request body of cURL below.
 
     1. Replace `body.xdmEntity` with contents of downloaded event json.
@@ -466,7 +462,7 @@ There are 2 ways to publish the journey; you may choose any of them:
     1. Set a unique value for variable `UNIQUE_EVENT_ID`.
 
     ```bash
-    curl --location "$EVENT_INLET_ID?synchronousValidation=true" \
+    curl --location "$EVENT_INLET_URL?synchronousValidation=true" \
     --header 'Content-Type: application/json' \
     --data-raw '{
         "header": {
@@ -483,7 +479,7 @@ There are 2 ways to publish the journey; you may choose any of them:
         "body": {
             "xdmMeta": {
                 "schemaRef": {
-                    "'$EVENT_SCHEMA_REF'",
+                    "id": "'$EVENT_SCHEMA_REF'",
                     "contentType": "application/vnd.adobe.xed-full+json;version=1.0"
                 }
             },
