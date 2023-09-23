@@ -25,6 +25,11 @@ description: This is an intruction page for simulating the '[!UICONTROL Unitary 
 <!-- TODO: attached image needs to change once postman is removed from UI -->
 ![Bill Of Material Page](../assets/bom-page.png)
 
+>[!PRO TIP]
+>
+>If you are using a terminal to run the curls, you can set variable values before running the curls so that there is no need to replace those values in individual curls.
+>For e.g: If you set `ORG_ID=************@AdobeOrg`, shell will automatically substitue every occurrence of `$ORG_ID` with the value, so you can copy, paste, and execute the curls below without any modification.
+
 ## Fetch IMS Token
 
 1. Please follow [Authenticate and access Experience Platform APIs](https://experienceleague.adobe.com/docs/experience-platform/landing/platform-apis/api-authentication.html) documentation to generate the Access Token.
@@ -456,6 +461,7 @@ There are 2 ways to publish the journey; you may choose any of them:
 1. At this step user must have values of `EVENT_DATASET_ID` and `EVENT_INLET_ID`; if not, please refer step `3` or `4` respectively.
 1. To ingest event, user need to change the time variable `TIMESTAMP` in request body of cURL below.
 
+    1. Replace `body.xdmEntity` with contents of downloaded event json.
     1. `TIMESTAMP` would the time of event occurance, use the timestamp in UTC timezone e.g. `2023-09-05T23:57:00.071+00:00`.
     1. Set a unique value for variable `UNIQUE_EVENT_ID`.
 
