@@ -25,7 +25,7 @@ description: This is an intruction page for simulating the '[!UICONTROL Unitary 
 <!-- TODO: attached image needs to change once postman is removed from UI -->
 ![Bill Of Material Page](../assets/bom-page.png)
 
->[!PRO TIP]
+>[!PRO-TIP]
 >
 >If you are using a terminal to run the curls, you can set variable values before running the curls so that there is no need to replace those values in individual curls.
 >For e.g: If you set `ORG_ID=************@AdobeOrg`, shell will automatically substitue every occurrence of `$ORG_ID` with the value, so you can copy, paste, and execute the curls below without any modification.
