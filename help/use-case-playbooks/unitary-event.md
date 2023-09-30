@@ -1,8 +1,8 @@
 ---
 title: Unitary event
 description: This is an intruction page for simulating the '[!UICONTROL Unitary event]' type of Journey validation.
+exl-id: 314f967c-e10f-4832-bdba-901424dc2eeb
 ---
-
 # Unitary event
 
 ## Steps to follow {#steps-to-follow}
